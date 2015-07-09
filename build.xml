@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<project name="antToRewriteHtmlContent" default="re-write-content" basedir=".">
+
+	<description>POC to check how to use ant to rewrite js imports in a file</description>
+
+	<target name="clean">
+	    <delete dir="build"/>
+	    <mkdir dir="build"/>
+	</target>
+	
+	<target name="copyContent">
+	   	<copy todir="build">
+			<fileset dir="WebContent" />
+		</copy>
+	</target>
+
+	<target name="re-write-content" depends="clean, copyContent">
+		<replaceregexp match='(\&lt;%--\sStart\sReplace\s--%\&gt;)(?s:.{0,})(\&lt;%--\sEnd\sReplace\s--%\&gt;)' 
+			flags="m" 
+			replace='\&lt;script src="_js/enduser/webscriptlet/webScriptlet-min.js"\&gt;\&lt;/script\&gt;${line.separator}\&lt;script src="_js/enduser/webscriptlet/cng-min.js"\&gt;\&lt;/script\&gt;' >
+			<fileset dir="build">
+    			<include name="*.jsp"/>
+ 			</fileset>
+		</replaceregexp>
+	</target>
+	
+	<target name="re-write-content-single-file" depends="clean, copyContent">
+	    <replaceregexp file="build/respondentActivity.jsp" match='(\&lt;%--\sStart\sReplace\s--%\&gt;)(?s:.{0,})(\&lt;%--\sEnd\sReplace\s--%\&gt;)' 
+			flags="m" 
+			replace='\&lt;script src="_js/enduser/webscriptlet/webScriptlet-min.js"\&gt;\&lt;/script\&gt;${line.separator}\&lt;script src="_js/enduser/webscriptlet/cng-min.js"\&gt;\&lt;/script\&gt;' >
+		</replaceregexp>
+	</target>
+	
+</project>
